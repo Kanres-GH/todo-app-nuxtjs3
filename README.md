@@ -1,75 +1,34 @@
-# Nuxt 3 Minimal Starter
+# To-Do List Manager
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Description
 
-## Setup
+The To-Do List Manager is a single-page application built with Nuxt3 and Tailwind CSS. It allows users to manage their to-do list, including adding, editing, and deleting tasks. The application uses localStorage to persist data, ensuring that tasks remain saved even after the page is reloaded.
 
-Make sure to install the dependencies:
+## Features
 
-```bash
-# npm
-npm install
+- Add new tasks
+- Edit existing tasks
+- Delete tasks
+- Persist tasks using localStorage
 
-# pnpm
-pnpm install
+## Installation
 
-# yarn
-yarn install
+### Prerequisites
 
-# bun
-bun install
-```
+Make sure you have the following installed:
 
-## Development Server
+- [Node.js](https://nodejs.org/) (version 14.x or higher)
+- [npm](https://www.npmjs.com/) (version 6.x or higher)
+- [Docker](https://www.docker.com/) (optional, for containerization)
 
-Start the development server on `http://localhost:3000`:
+### Steps
 
-```bash
-# npm
-npm run dev
+1. Clone the repository:
 
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+   ```bash
+   git clone <repository-url>
+   cd todo-app
+   ```
+2. Install dependencies:
+    ```npm install
+    ```
