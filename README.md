@@ -25,23 +25,24 @@ Make sure you have the following installed:
 
 1. Clone the repository:
 
-   ```bash
+   ```
    git clone <repository-url>
    cd todo-app
    ```
 2. Install dependencies:
-    ```npm install
+    ```
+    npm install
     ```
 ## Launch
 
 ### Development Server
 
 1. Run the development server:
-    ```bash
+    ```
     npm run dev
     ```
 2. Open your browser and navigate to:
-    ```bash
+    ```
     http://localhost:3000
     ```
 ## Deployment
@@ -50,15 +51,15 @@ The To-Do List Manager can be deployed using Docker. Follow the steps below to c
 
 ### Docker Deployment
 1. Build the Docker image:
-    ```bash
+    ```
     docker build -t todo-app .
     ```
 2. Run the Docker container:
-    ```bash
+    ```
     docker run -p 3000:3000 todo-app
     ```
 3. Open your browser and navigate to:
-    ```bash
+    ```
     http://localhost:3000
     ```
 ## Makefile
