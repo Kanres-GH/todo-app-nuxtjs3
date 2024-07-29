@@ -30,8 +30,7 @@ Make sure you have the following installed:
    cd todo-app
    ```
 2. Install dependencies:
-    ```bash
-    npm install
+    ```npm install
     ```
 ## Launch
 
@@ -45,3 +44,29 @@ Make sure you have the following installed:
     ```bash
     http://localhost:3000
     ```
+## Deployment
+
+The To-Do List Manager can be deployed using Docker. Follow the steps below to containerize and run the application.
+
+### Docker Deployment
+1. Build the Docker image:
+    ```bash
+    docker build -t todo-app .
+    ```
+2. Run the Docker container:
+    ```bash
+    docker run -p 3000:3000 todo-app
+    ```
+3. Open your browser and navigate to:
+    ```bash
+    http://localhost:3000
+    ```
+## Makefile
+A Makefile is provided to simplify the common commands for building and running the application with Docker.
+### Available Commands
+- make build: Build the Docker image for the To-Do List Manager.
+- make run: Run the Docker container for the To-Do List Manager.
+- make stop: Stop the running Docker container.
+
+## Input Validation
+The application includes input validation to ensure that tasks cannot be added without a valid name. An error message will be displayed if the input is empty or if the input contains invalid characters.
