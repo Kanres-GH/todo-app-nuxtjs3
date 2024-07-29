@@ -30,5 +30,18 @@ Make sure you have the following installed:
    cd todo-app
    ```
 2. Install dependencies:
-    ```npm install
+    ```bash
+    npm install
+    ```
+## Launch
+
+### Development Server
+
+1. Run the development server:
+    ```bash
+    npm run dev
+    ```
+2. Open your browser and navigate to:
+    ```bash
+    http://localhost:3000
     ```
