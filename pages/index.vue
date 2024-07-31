@@ -1,72 +1,80 @@
 <template>
-  <div class="h-screen w-screen content-center">
-    <div class="second-bg">
-      <div class="todo-content flex flex-col justify-self-center">
-        <h1 class="text-center mt-3 rounded-full"><i>To-Do List Manager</i></h1>
-        <h2 class="text-center mt-5 mb-3">Enter a task name</h2>
-        <div class="todo-form flex justify-center flex-col gap-5">
+  <div class="h-screen w-screen flex justify-center items-center bg-gray-100">
+    <div class="container mx-auto p-4">
+      <div class="todo-content flex flex-col items-center">
+        <h1 class="text-center mt-3 text-3xl md:text-5xl rounded-full"><i>To-Do List Manager</i></h1>
+        <h2 class="text-center mt-5 mb-3 text-lg md:text-2xl">Enter a task name</h2>
+        <div class="todo-form flex flex-col items-center gap-5">
           <input
             type="text"
             id="inputt"
             v-model="inputValue"
             @input="clearWarningMessage"
-            class="w-full px-4 py-2 rounded-lg text-lg md:px-4 md:py-4"
+            class="w-full md:w-1/2 px-4 py-2 rounded-lg text-lg md:px-4 md:py-4"
             placeholder="E.g. 'Make a sandwich'"
             required
           />
-          <button class="btn" :disabled="!isInputValid" @click="addTask">Add the task</button>
+          <button class="btn w-full md:w-1/2" :disabled="!isInputValid" @click="addTask">Add the task</button>
           <p v-if="warningMessage" class="text-red-500 text-center">{{ warningMessage }}</p>
         </div>
-        <div class="task-list mt-5">
-          <ul>
-            <li v-for="(task, index) in tasks" :key="index" class="flex justify-between items-center bg-white p-4 mb-2 rounded-lg shadow">
-              <div v-if="editingIndex === index">
-                <input
-                  type="text"
-                  v-model="editingTaskName"
-                  class="px-4 py-2 rounded-lg text-lg md:px-4 md:py-4 edit-btn"
-                />
-              </div>
-              <div v-else>
-                <span :class="{ 'line-through': task.completed }">{{ task.text }}</span>
-              </div>
-              <div class="flex gap-2">
-                <button class="btn" @click="editTask(index)" v-if="editingIndex !== index">Edit</button>
-                <button class="btn bg-green-500" @click="saveTask(index)" v-if="editingIndex === index">Save</button>
-                <button class="btn bg-red-500" @click="deleteTask(index)">Delete</button>
-                <button class="btn bg-blue-500" @click="toggleCompleteTask(index)">
-                  {{ task.completed ? 'Undo' : 'Complete' }}
-                </button>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <ul class="mt-5 w-full md:w-1/2">
+          <li
+            v-for="(task, index) in tasks"
+            :key="index"
+            class="task-item flex justify-between items-center p-2 mb-2 bg-white rounded-lg shadow-md"
+          >
+            <div v-if="task.isEditing" class="flex-grow">
+              <input
+                type="text"
+                v-model="task.newName"
+                class="w-full px-2 py-1 rounded-lg"
+                placeholder="Edit task name"
+              />
+            </div>
+            <div v-else class="flex-grow">
+              <span>{{ task.name }}</span>
+            </div>
+            <div class="flex-shrink-0 ml-2">
+              <button
+                v-if="task.isEditing"
+                @click="saveTask(index)"
+                class="btn text-xs"
+              >
+                Save
+              </button>
+              <button
+                v-else
+                @click="editTask(index)"
+                class="btn text-xs"
+              >
+                Edit
+              </button>
+              <button
+                @click="deleteTask(index)"
+                class="btn btn-red text-xs"
+              >
+                Delete
+              </button>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const inputValue = ref('');
 const tasks = ref([]);
 const warningMessage = ref('');
-const editingIndex = ref(null);
-const editingTaskName = ref('');
+
+onMounted(() => {
+  loadTasksFromLocalStorage();
+});
 
 const isInputValid = computed(() => inputValue.value.trim() !== '');
-
-const loadTasks = () => {
-  const savedTasks = localStorage.getItem('tasks');
-  if (savedTasks) {
-    tasks.value = JSON.parse(savedTasks);
-  }
-};
-
-const saveTasks = () => {
-  localStorage.setItem('tasks', JSON.stringify(tasks.value));
-};
 
 const clearWarningMessage = () => {
   warningMessage.value = '';
@@ -74,96 +82,52 @@ const clearWarningMessage = () => {
 
 const addTask = () => {
   if (!isInputValid.value) {
+    warningMessage.value = 'Please enter a task name';
+    return;
+  }
+
+  tasks.value.push({
+    name: inputValue.value.trim(),
+    isEditing: false,
+    newName: '',
+  });
+
+  inputValue.value = '';
+  saveTasksToLocalStorage();
+};
+
+const editTask = (index) => {
+  tasks.value[index].isEditing = true;
+  tasks.value[index].newName = tasks.value[index].name;
+};
+
+const saveTask = (index) => {
+  if (tasks.value[index].newName.trim() === '') {
     warningMessage.value = 'Task name cannot be empty';
     return;
   }
 
-  tasks.value.push({ text: inputValue.value, completed: false });
-  inputValue.value = '';
-  saveTasks();
+  tasks.value[index].name = tasks.value[index].newName.trim();
+  tasks.value[index].isEditing = false;
+  tasks.value[index].newName = '';
+  saveTasksToLocalStorage();
 };
 
 const deleteTask = (index) => {
   tasks.value.splice(index, 1);
-  saveTasks();
+  saveTasksToLocalStorage();
 };
 
-const toggleCompleteTask = (index) => {
-  tasks.value[index].completed = !tasks.value[index].completed;
-  saveTasks();
+const saveTasksToLocalStorage = () => {
+  localStorage.setItem('tasks', JSON.stringify(tasks.value));
 };
 
-const editTask = (index) => {
-  editingIndex.value = index;
-  editingTaskName.value = tasks.value[index].text;
+const loadTasksFromLocalStorage = () => {
+  const storedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.value = storedTasks;
 };
-
-const saveTask = (index) => {
-  if (editingTaskName.value.trim() === '') {
-    warningMessage.value = 'Task name cannot be empty';
-    return;
-  }
-
-  tasks.value[index].text = editingTaskName.value;
-  editingIndex.value = null;
-  editingTaskName.value = '';
-  saveTasks();
-};
-
-onMounted(() => {
-  loadTasks();
-});
 </script>
 
 <style scoped>
-h3 {
-  font-size: 2vw;
-  font-weight: bold;
-}
-
-p {
-  font-size: 1.6vw;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.line-through {
-  text-decoration: line-through;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.task-list {
-  margin-top: 20px;
-}
-
-.bg-blue-500 {
-  background-color: #3b82f6;
-}
-
-.bg-red-500 {
-  background-color: #ef4444;
-}
-
-.bg-green-500 {
-  background-color: #10b981;
-}
-
-.edit-btn {
-  border: 1px solid gray;
-  width: 90%;
-}
 
 </style>
